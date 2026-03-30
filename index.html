@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cas SEPRONA: Aletes sense identificació</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- GLOBAL HUD / TIMER -->
+    <div id="global-hud" class="hidden">
+        <div class="hud-left">
+            <span class="hud-label">AGENT SEPRONA </span>
+            <span class="hud-value blink-slow">#ID-8842</span>
+        </div>
+        <div class="hud-center">
+            <h2 class="timer-display" id="timer"><i class="fa-solid fa-clock"></i> 60:00</h2>
+        </div>
+        <div class="hud-right">
+            <span class="hud-label">PENALITZACIONS:</span>
+            <span class="hud-value penalty-count" id="penalty-count">0</span>
+        </div>
+    </div>
+
+    <!-- MAIN CONTAINER -->
+    <main class="app-container">
+
+        <!-- SCREEN 1: START -->
+        <section id="screen-start" class="screen active">
+            <div class="glass-panel text-center pulse-glow">
+                <div class="logo-placeholder">
+                    <i class="fa-solid fa-shield-halved fa-4x text-accent"></i>
+                </div>
+                <h1 class="main-title">Cas SEPRONA:<br><span class="text-accent">Aletes sense identificació</span></h1>
+                <p class="subtitle mt-2" style="max-width: 600px; margin: 15px auto; font-size: 1.1rem; line-height: 1.4;">Simulador de Genètica Forense de Vida Silvestre.<br><br>ATENCIÓ: El temps total de la missió és de <strong>60 minuts</strong>. El compte enrere cronometrat s'iniciarà en l'instant precís en què premis el botó inferior per començar.</p>
+                
+                <div class="mt-4">
+                    <button class="btn btn-primary btn-large btn-glitch" onclick="startInvestigation()">
+                        INICIAR INVESTIGACIÓ <i class="fa-solid fa-chevron-right ml-1"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- SCREEN 1.1: PRE-DIAGNOSIS (BLOQUE INICIAL CON TEMPORIZADOR INTEGRADO) -->
+        <section id="screen-pre-diagnosis" class="screen hidden">
+            <div class="glass-panel" style="position: relative;">
+                
+                <!-- ZONA DE TEMPORIZADOR VISUALMENTE INTEGRADA EN EL BLOQUE INICIAL -->
+                <div class="timer-integrated-block" style="background: rgba(220, 53, 69, 0.1); border: 1px solid var(--danger); padding: 15px; border-radius: 8px; margin-bottom: 25px; text-align: center; box-shadow: 0 0 15px rgba(220, 53, 69, 0.2);">
+                    <span class="hud-label text-danger d-block mb-1" style="font-size: 0.95rem; letter-spacing: 2px;">TEMPS RESTANT DE LA MISSIÓ </span>
+                    <h2 class="timer-display text-danger m-0 pulse-glow sync-timer" style="font-size: 2.8rem; letter-spacing: 4px;"><i class="fa-solid fa-clock"></i> 60:00</h2>
+                </div>
+
+                <h2 class="section-title"><i class="fa-solid fa-clipboard-question text-accent"></i> PROVES PRÈVIES PER SABER SI ETS UN BON CANDIDAT PER INICIAR LA RECERCA</h2>
+                <h3 class="panel-subtitle mt-2">Diagnosi inicial</h3>
+                <div class="content-box mb-3">
+                    <p>Abans de començar el treball de recerca, és important conèixer el teu nivell de base en conceptes de genètica i zoologia. Aquest qüestionari inicial ens ajudarà a valorar els teus coneixements previs i la teva capacitat de raonament científic.</p>
+                    <p>Llegeix atentament cada pregunta i selecciona la resposta que consideris correcta.</p>
+                </div>
+                
+                <div id="quiz-container" class="quiz-container">
+                    <!-- Generat per JS -->
+                </div>
+                
+                <div id="pre-diagnosis-feedback" class="feedback-msg mt-2"></div>
+                
+                <div class="actions flex-end mt-3">
+                    <button class="btn btn-primary" onclick="verifyPreDiagnosis()">Validar respostes <i class="fa-solid fa-check ml-1"></i></button>
+                    <button id="btn-next-pre" class="btn btn-success hidden ml-2" onclick="showScreen('screen-pre-wordsearch')">Continuar a la següent prova <i class="fa-solid fa-chevron-right ml-1"></i></button>
+                </div>
+            </div>
+        </section>
+
+        <!-- SCREEN 1.2: PRE-WORDSEARCH -->
+        <section id="screen-pre-wordsearch" class="screen hidden">
+            <div class="glass-panel">
+                
+                <!-- ZONA DE TEMPORIZADOR VISUALMENTE INTEGRADA EN EL BLOQUE INICIAL -->
+                <div class="timer-integrated-block" style="background: rgba(220, 53, 69, 0.1); border: 1px solid var(--danger); padding: 10px; border-radius: 8px; margin-bottom: 20px; text-align: center;">
+                    <span class="hud-label text-danger d-block mb-1" style="font-size: 0.8rem; letter-spacing: 2px;">TEMPS RESTANT DE LA MISSIÓ </span>
+                    <h2 class="timer-display text-danger m-0 sync-timer" style="font-size: 2rem; letter-spacing: 4px;"><i class="fa-solid fa-clock"></i> 60:00</h2>
+                </div>
+
+                <h2 class="section-title"><i class="fa-solid fa-puzzle-piece text-accent"></i> PROVES PRÈVIES PER SABER SI ETS UN BON CANDIDAT PER INICIAR LA RECERCA</h2>
+                <h3 class="panel-subtitle mt-2">Identificació de conceptes clau</h3>
+                
+                <div class="content-box mb-3">
+                    <p class="instruction">Troba les 12 paraules amagades a la sopa de lletres de 20x20. Hi trobaràs 4 paraules en horitzontal d'esquerra a dreta, 4 en vertical de dalt a baix i 4 en diagonal descendent d'esquerra a dreta. Clica les lletres per formar cada paraula; quan la trobis correctament, quedarà marcada dins la sopa.</p>
+                </div>
+
+                <div class="flex-between align-start" style="gap: 20px; flex-wrap: wrap;">
+                    <div class="wordsearch-grid-container" id="wordsearch-grid">
+                        <!-- Generat per JS -->
+                    </div>
+                    
+                    <div class="wordsearch-inputs flex-grow">
+                        <h4 class="mb-2">Paraules a trobar:</h4>
+                        <div class="word-list" id="wordsearch-list">
+                            <!-- JS generate 12 divs -->
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="wordsearch-feedback" class="feedback-msg mt-2"></div>
+
+                <div class="actions flex-end mt-3">
+                    <button class="btn btn-primary" onclick="verifyWordSearch()">Validar estat de la prova <i class="fa-solid fa-check ml-1"></i></button>
+                    <button id="btn-start-game-real" class="btn btn-success hidden ml-2" onclick="showScreen('screen-intro1')">Començar recerca <i class="fa-solid fa-chevron-right ml-1"></i></button>
+                </div>
+            </div>
+        </section>
+
+        <!-- SCREEN 2: INTRO 1 (mtDNA) -->
+        <section id="screen-intro1" class="screen hidden">
+            <div class="glass-panel">
+                <h2 class="section-title"><i class="fa-solid fa-dna text-accent"></i> Base de dades: ADN Mitocondrial</h2>
+                <div class="content-box">
+                    <p>Com a agent d'investigació, utilitzaràs la genètica per resoldre aquest cas. Ens basarem en l'<strong>ADN mitocondrial (ADNmt)</strong>, que és ideal per a mostres degradades per diverses raons:</p>
+                    <ul class="feature-list mt-2">
+                        <li><i class="fa-solid fa-check text-success"></i> Es troba dins dels orgànuls cel·lulars anomenats <strong>mitocondris</strong>.</li>
+                        <li><i class="fa-solid fa-check text-success"></i> Hi ha <strong>centenars o milers de còpies</strong> per cèl·lula (en lloc de només dues com l'ADN nuclear).</li>
+                        <li><i class="fa-solid fa-check text-success"></i> Presenta <strong>herència materna</strong> (sense recombinació).</li>
+                    </ul>
+                </div>
+                <div class="actions flex-between mt-3">
+                    <button class="btn btn-outline" onclick="showScreen('screen-start')">Enrere</button>
+                    <button class="btn btn-primary" onclick="showScreen('screen-intro2')">Següent <i class="fa-solid fa-chevron-right ml-1"></i></button>
+                </div>
+            </div>
+        </section>
+
+        <!-- SCREEN 3: INTRO 2 (DNA Barcoding) -->
+        <section id="screen-intro2" class="screen hidden">
+            <div class="glass-panel">
+                <h2 class="section-title"><i class="fa-solid fa-barcode text-accent"></i> Base de dades: DNA Barcoding</h2>
+                <div class="content-box">
+                    <p>Utilitzarem una tècnica anomenada <strong>DNA Barcoding (Codi de barres d'ADN)</strong>. És un mètode per identificar espècies utilitzant una secció curta d'ADN d'un gen estàndard:</p>
+                    <ul class="feature-list mt-2">
+                        <li><i class="fa-solid fa-microscope text-accent"></i> En animals, freqüentment s'utilitza la regió del gen <strong>COI (Citocrom c oxidasa I)</strong>.</li>
+                        <li><i class="fa-solid fa-magnifying-glass text-accent"></i> Permet la <strong>identificació objectiva d'espècies</strong> fins i tot a partir de fragments o restes processades de l'animal.</li>
+                        <li><i class="fa-solid fa-database text-accent"></i> La seqüència obtinguda es compara amb grans <strong>bases de dades internacionals (com BOLD o GenBank)</strong> per trobar coincidències.</li>
+                    </ul>
+                </div>
+                <div class="actions flex-between mt-3">
+                    <button class="btn btn-outline" onclick="showScreen('screen-intro1')">Enrere</button>
+                    <button class="btn btn-primary" onclick="showScreen('screen-context')">Següent <i class="fa-solid fa-chevron-right ml-1"></i></button>
+                </div>
+            </div>
+        </section>
+
+        <!-- SCREEN 4: CONTEXT -->
+        <section id="screen-context" class="screen hidden">
+            <div class="glass-panel alert-panel border-danger">
+                <div class="alert-header">
+                    <i class="fa-solid fa-triangle-exclamation fa-2x text-danger alert-icon blink-fast"></i>
+                    <h2 class="section-title text-danger m-0">ALERTA AL PORT DUANER</h2>
+                </div>
+                <div class="content-box mt-2">
+                    <p>Han confiscat un contenidor sospitós ple d'aletes de tauró separades del cos superior (pràctica coneguda com a <em>finning</em>). L'armador assegura que són espècies d'alta mar no protegides per permetre la seua comercialització global.</p>
+                    <p>No hi ha caps, no hi ha aletes dorsals i no hi ha cossos per identificar-los morfològicament.</p>
+                    <div class="objective-box mt-2">
+                        <strong>EL TEU OBJECTIU:</strong>
+                        <p>Aïllar el material genètic i determinar l'espècie en menys d'1 hora per retenir el carregament abans que caduqui la retenció duanera.</p>
+                    </div>
+                </div>
+                <div class="actions flex-end mt-3">
+                    <button class="btn btn-danger btn-glitch" onclick="startGame()">ENTES, INICIAR MISSIÓ <i class="fa-solid fa-power-off ml-1"></i></button>
+                </div>
+            </div>
+        </section>
+
+        <!-- SCREEN 5: DASHBOARD -->
+        <section id="screen-dashboard" class="screen hidden">
+            <div class="dashboard-grid">
+                <!-- Control Panel (Left) -->
+                <div class="glass-panel control-panel">
+                    <h3 class="panel-subtitle"><i class="fa-solid fa-list-check"></i> Seqüència de Procés</h3>
+                    <p class="small-text text-muted mb-2">Has de resoldre totes les etapes per generar l'informe final.</p>
+                    
+                    <div class="trial-list mt-2">
+                        <button class="trial-btn" id="btn-trial1" onclick="showScreen('screen-trial1')">
+                            1. Mostra a analitzar <i class="fa-solid fa-lock text-muted status-icon"></i>
+                        </button>
+                        <button class="trial-btn disabled" id="btn-trial2" onclick="showScreen('screen-trial2')">
+                            2. Tècnica <i class="fa-solid fa-lock text-muted status-icon"></i>
+                        </button>
+                        <button class="trial-btn disabled" id="btn-trial3" onclick="showScreen('screen-trial3')">
+                            3. Marcador <i class="fa-solid fa-lock text-muted status-icon"></i>
+                        </button>
+                        <button class="trial-btn disabled" id="btn-trial4" onclick="showScreen('screen-trial4')">
+                            4. Procés <i class="fa-solid fa-lock text-muted status-icon"></i>
+                        </button>
+                        <button class="trial-btn disabled" id="btn-trial5" onclick="showScreen('screen-trial5')">
+                            5. Seqüència <i class="fa-solid fa-lock text-muted status-icon"></i>
+                        </button>
+                        <button class="trial-btn disabled" id="btn-trial6" onclick="showScreen('screen-trial6')">
+                            6. Resolució <i class="fa-solid fa-lock text-muted status-icon"></i>
+                        </button>
+                    </div>
+                    
+                    <button id="btn-final-report" class="btn btn-success mt-3 w-100 hidden" onclick="showScreen('screen-final')">
+                        IMPRIMIR INFORME OFICIAL <i class="fa-solid fa-print ml-1"></i>
+                    </button>
+                </div>
+
+                <!-- Technical Report (Right) -->
+                <div class="glass-panel report-panel">
+                    <div class="report-header flex-between">
+                        <h3 class="panel-subtitle m-0"><i class="fa-solid fa-file-contract"></i> INFORME TÈCNIC PERITATGE</h3>
+                        <span class="badge badge-pending">PENDENT</span>
+                    </div>
+                    
+                    <div class="report-fields mt-3">
+                        <div class="field-row">
+                            <span class="field-label">Tipus de mostra:</span>
+                            <span class="field-value blocked" id="dashboard-f1">[DADES BLOQUEJADES]</span>
+                        </div>
+                        <div class="field-row">
+                            <span class="field-label">Tècnica d'ID:</span>
+                            <span class="field-value blocked" id="dashboard-f2">[DADES BLOQUEJADES]</span>
+                        </div>
+                        <div class="field-row">
+                            <span class="field-label">Gen analitzat:</span>
+                            <span class="field-value blocked" id="dashboard-f3">[DADES BLOQUEJADES]</span>
+                        </div>
+                        <div class="field-row">
+                            <span class="field-label">Procés anàlisi:</span>
+                            <span class="field-value blocked" id="dashboard-f4">[DADES BLOQUEJADES]</span>
+                        </div>
+                        <div class="field-row">
+                            <span class="field-label">Nivell coincidència:</span>
+                            <span class="field-value blocked" id="dashboard-f5">[DADES BLOQUEJADES]</span>
+                        </div>
+                        <div class="field-row">
+                            <span class="field-label">Espècie identificada:</span>
+                            <span class="field-value blocked hightlight-value" id="dashboard-f6">[DADES BLOQUEJADES]</span>
+                        </div>
+                    </div>
+
+                    <div class="terminal-box mt-3">
+                        <div class="terminal-header">
+                            <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
+                            <span class="terminal-title">SEPRONA_terminal_v2.4</span>
+                        </div>
+                        <div class="terminal-body" id="terminal-log">
+                            > Sistema operatiu cargat.<br>
+                            > Esperant entrada de dades del primer anàlisi...<br>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SCREEN 6: TRIAL 1 -->
+        <section id="screen-trial1" class="screen hidden trial-screen">
+            <div class="glass-panel">
+                <div class="flex-between mb-2">
+                    <h2 class="section-title"><i class="fa-solid fa-vial"></i> PROVA 1: Tipus de mostra</h2>
+                    <button class="btn btn-sm btn-outline px-1" onclick="showScreen('screen-dashboard')"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+                
+                <div class="content-box mb-3">
+                    <p>Tens davant teu una de les aletes confiscades. Per poder realitzar l'extracció d'ADN necessitem un tipus de teixit concret.</p>
+                </div>
+
+                <!-- Word sorter -->
+                <div class="puzzle-box">
+                    <p class="instruction">Ratlla les paraules incorrectes fent clic sobre elles i escriu la teva resposta final de manera ordenada:</p>
+                    <div id="trial1-words" class="draggable-container">
+                        <span class="draggable-word" onclick="toggleWord(this)">TROSSOS</span>
+                        <span class="draggable-word" onclick="toggleWord(this)">EL</span>
+                        <span class="draggable-word" onclick="toggleWord(this)">OS</span>
+                        <span class="draggable-word" onclick="toggleWord(this)">TALLANTS</span>
+                        <span class="draggable-word" onclick="toggleWord(this)">MUSCULAR</span>
+                        <span class="draggable-word" onclick="toggleWord(this)">TEIXIT</span>
+                        <span class="draggable-word" onclick="toggleWord(this)">PETITS</span>
+                        <span class="draggable-word" onclick="toggleWord(this)">DE</span>
+                        <span class="draggable-word" onclick="toggleWord(this)">AMB</span>
+                    </div>
+
+                    <div class="input-group mt-3">
+                        <label>Escriu de manera ordenada les paraules correctes que has esbrinat:</label>
+                        <input type="text" id="t1-input" class="form-control" placeholder="Escriu la resposta aquí..." autocomplete="off">
+                    </div>
+                    
+                    <div id="t1-feedback" class="feedback-msg mt-1"></div>
+                </div>
+
+                <div class="actions flex-between mt-3">
+                    <button class="btn btn-outline" onclick="showScreen('screen-dashboard')">Tornar al Peritatge</button>
+                    <button class="btn btn-primary" onclick="verifyTrial1()">Validar Entrada <i class="fa-solid fa-microchip ml-1"></i></button>
+                </div>
+            </div>
+        </section>
+
+        <!-- SCREEN 7: TRIAL 2 -->
+        <section id="screen-trial2" class="screen hidden trial-screen">
+            <div class="glass-panel">
+                <div class="flex-between mb-2">
+                    <h2 class="section-title"><i class="fa-solid fa-microscope"></i> PROVA 2: Tècnica d'Identificació</h2>
+                    <button class="btn btn-sm btn-outline px-1" onclick="showScreen('screen-dashboard')"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+                
+                <div class="content-box mb-3">
+                    <p>Ara que tens teixit muscular, hem de decidir la tècnica de laboratori i informàtica que processarà aquest teixit per arribar finalment a l'espècie en qüestió, tal com vam veure a la introducció.</p>
+                </div>
+
+                <div class="puzzle-box">
+                    <p class="instruction">Selecciona la tècnica correcta:</p>
+                    <div class="radio-group" id="t2-options">
+                        <label class="radio-label"><input type="radio" name="techOption" value="A"> <span>Comparació d'estructures òssies i cartílag</span></label>
+                        <label class="radio-label"><input type="radio" name="techOption" value="B"> <span>Anàlisi de grups sanguinis (Sistema ABO)</span></label>
+                        <label class="radio-label"><input type="radio" name="techOption" value="C"> <span>Seqüenciació completa del genoma (WGS)</span></label>
+                        <label class="radio-label"><input type="radio" name="techOption" value="D"> <span>PCR específica d'una espècie concreta (només detecta tauró blanc)</span></label>
+                        <label class="radio-label"><input type="radio" name="techOption" value="E"> <span>Anàlisi STRs (Microsatèl·lits de genètica forense humana)</span></label>
+                        <label class="radio-label"><input type="radio" name="techOption" value="F"> <span>DNA Barcoding comparat en bases de dades com BOLD / GenBank</span></label>
+                    </div>
+                    <div id="t2-feedback" class="feedback-msg mt-2"></div>
+                </div>
+
+                <div class="actions flex-between mt-3">
+                    <button class="btn btn-outline" onclick="showScreen('screen-dashboard')">Tornar al Peritatge</button>
+                    <button class="btn btn-primary" onclick="verifyTrial2()">Validar Tècnica <i class="fa-solid fa-microchip ml-1"></i></button>
+                </div>
+            </div>
+        </section>
+        
+        <!-- SCREEN 8: TRIAL 3 -->
+        <section id="screen-trial3" class="screen hidden trial-screen">
+            <div class="glass-panel">
+                <div class="flex-between mb-2">
+                    <h2 class="section-title"><i class="fa-solid fa-dna"></i> PROVA 3: Gen Analitzat</h2>
+                    <button class="btn btn-sm btn-outline px-1" onclick="showScreen('screen-dashboard')"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+                
+                <div class="content-box mb-3">
+                    <p>Dèiem que fem servir l'ADN mitocondrial. Però, de tots els gens que hi ha en el genoma mitocondrial (13 gens codificants per a proteïnes), n'hi ha un que s'usa pràcticament de forma universal com a "codi de barres" estàndard per a la majoria d'animals.</p>
+                </div>
+
+                <div class="puzzle-box">
+                    <p class="instruction text-left mb-2">Resol aquest crucigrama per trobar l'acrònim del gen utilitzat:</p>
+                    
+                    <div class="flex-container d-flex flex-wrap" style="display:flex; flex-direction:row; gap: 15px; align-items:flex-start;">
+                        <!-- Clues List -->
+                        <div class="clues-list text-left small-text flex-grow-1" style="flex:1; min-width: 250px; background: rgba(0,0,0,0.1); border-left: 3px solid var(--accent); padding: 10px;">
+                            <ul style="list-style-type: none; padding-left: 0; margin-bottom: 0;">
+                                <li class="mb-2"><strong>1. Vertical:</strong> Molècula que conté la informació genètica dels éssers vius.</li>
+                                <li class="mb-2"><strong>2. Horitzontal:</strong> Orgànul cel·lular que conté ADN propi.</li>
+                                <li class="mb-2"><strong>3. Vertical:</strong> Procés que permet obtenir l’ordre dels nucleòtids d’un fragment d’ADN.</li>
+                                <li class="mb-2"><strong>4. Vertical:</strong> Procés mitjançant el qual s’obtenen moltes còpies d’un fragment d’ADN.</li>
+                                <li class="mb-0"><strong>5. Horitzontal:</strong> ADN que només s’hereta de la mare.</li>
+                            </ul>
+                        </div>
+                        
+                        <!-- Crossword Grid -->
+                        <div class="crossword-wrapper" style="flex:1; min-width: 320px;">
+                            <style>
+                                .crossword-board {
+                                    display: grid;
+                                    grid-template-columns: repeat(14, 25px);
+                                    grid-template-rows: repeat(12, 25px);
+                                    gap: 2px;
+                                    justify-content: center;
+                                }
+                                .cw-cell {
+                                    background: rgba(0, 0, 0, 0.5);
+                                    border: 1px solid rgba(255, 255, 255, 0.3);
+                                    border-radius: 3px;
+                                    position: relative;
+                                    display: flex;
+                                }
+                                .cw-cell.highlight {
+                                    background: rgba(0, 204, 255, 0.2);
+                                    border: 2px solid var(--accent);
+                                    box-shadow: 0 0 6px rgba(0, 204, 255, 0.5);
+                                    z-index: 1;
+                                }
+                                .cw-num {
+                                    position: absolute;
+                                    top: 1px;
+                                    left: 2px;
+                                    font-size: 8px;
+                                    color: #aaa;
+                                    font-weight: bold;
+                                    pointer-events: none;
+                                }
+                                .cw-cell input {
+                                    width: 100%;
+                                    height: 100%;
+                                    background: transparent;
+                                    border: none;
+                                    text-align: center;
+                                    color: #fff;
+                                    font-family: inherit;
+                                    font-size: 14px;
+                                    text-transform: uppercase;
+                                    padding: 0;
+                                    outline: none;
+                                }
+                                .cw-cell.highlight input {
+                                    color: var(--accent);
+                                    font-weight: bold;
+                                }
+                            </style>
+                            <div class="crossword-board">
+                                <!-- Sequenciacio (3) V -->
+                                <div class="cw-cell" style="grid-row: 1; grid-column: 7;"><span class="cw-num">3</span><input type="text" maxlength="1"></div>
+                                <div class="cw-cell" style="grid-row: 2; grid-column: 7;"><input type="text" maxlength="1"></div>
+                                <div class="cw-cell" style="grid-row: 3; grid-column: 7;"><input type="text" maxlength="1"></div>
+                                <div class="cw-cell" style="grid-row: 4; grid-column: 7;"><input type="text" maxlength="1"></div>
+                                <div class="cw-cell" style="grid-row: 5; grid-column: 7;"><input type="text" maxlength="1"></div>
+                                <div class="cw-cell highlight" style="grid-row: 7; grid-column: 7;"><span class="cw-num" style="color:var(--accent);">*</span><input type="text" maxlength="1"></div>
+                                <div class="cw-cell" style="grid-row: 8; grid-column: 7;"><input type="text" maxlength="1"></div>
+                                <div class="cw-cell" style="grid-row: 9; grid-column: 7;"><input type="text" maxlength="1"></div>
+                                <div class="cw-cell highlight" style="grid-row: 11; grid-column: 7;"><span class="cw-num" style="color:var(--accent);">*</span><input type="text" maxlength="1"></div>
+                                <div class="cw-cell" style="grid-row: 12; grid-column: 7;"><input type="text" maxlength="1"></div>
+
+                                <!-- PCR (4) V -->
+                                <div class="cw-cell" style="grid-row: 5; grid-column: 5;"><span class="cw-num">4</span><input type="text" maxlength="1"></div>
+                                <div class="cw-cell" style="grid-row: 7; grid-column: 5;"><input type="text" maxlength="1"></div>
+
+                                <!-- Mitocondri (2) H -->
+                                <div class="cw-cell" style="grid-row: 6; grid-column: 1;"><span class="cw-num">2</span><input type="text" maxlength="1"></div>
+                                <div class="cw-cell" style="grid-row: 6; grid-column: 2;"><input type="text" maxlength="1"></div>
+                                <div class="cw-cell" style="grid-row: 6; grid-column: 3;"><input type="text" maxlength="1"></div>
+                                <div class="cw-cell" style="grid-row: 6; grid-column: 4;"><input type="text" maxlength="1"></div>
+                                <div class="cw-cell" style="grid-row: 6; grid-column: 5;"><input type="text" maxlength="1"></div> <!-- PCR cross -->
+                                <div class="cw-cell" style="grid-row: 6; grid-column: 6;"><input type="text" maxlength="1"></div>
+                                <div class="cw-cell" style="grid-row: 6; grid-column: 7;"><input type="text" maxlength="1"></div> <!-- SEQ cross -->
+                                <div class="cw-cell" style="grid-row: 6; grid-column: 8;"><input type="text" maxlength="1"></div>
+                                <div class="cw-cell" style="grid-row: 6; grid-column: 9;"><input type="text" maxlength="1"></div>
+                                <div class="cw-cell" style="grid-row: 6; grid-column: 10;"><input type="text" maxlength="1"></div>
+
+                                <!-- ADN (1) V -->
+                                <div class="cw-cell" style="grid-row: 9; grid-column: 10;"><span class="cw-num">1</span><input type="text" maxlength="1"></div>
+                                <div class="cw-cell" style="grid-row: 11; grid-column: 10;"><input type="text" maxlength="1"></div>
+
+                                <!-- Mitocondrial (5) H -->
+                                <div class="cw-cell" style="grid-row: 10; grid-column: 3;"><span class="cw-num">5</span><input type="text" maxlength="1"></div>
+                                <div class="cw-cell" style="grid-row: 10; grid-column: 4;"><input type="text" maxlength="1"></div>
+                                <div class="cw-cell" style="grid-row: 10; grid-column: 5;"><input type="text" maxlength="1"></div>
+                                <div class="cw-cell" style="grid-row: 10; grid-column: 6;"><input type="text" maxlength="1"></div>
+                                <div class="cw-cell" style="grid-row: 10; grid-column: 7;"><input type="text" maxlength="1"></div> <!-- SEQ cross -->
+                                <div class="cw-cell highlight" style="grid-row: 10; grid-column: 8;"><span class="cw-num" style="color:var(--accent);">*</span><input type="text" maxlength="1"></div> <!-- Highlight O -->
+                                <div class="cw-cell" style="grid-row: 10; grid-column: 9;"><input type="text" maxlength="1"></div>
+                                <div class="cw-cell" style="grid-row: 10; grid-column: 10;"><input type="text" maxlength="1"></div> <!-- ADN cross -->
+                                <div class="cw-cell" style="grid-row: 10; grid-column: 11;"><input type="text" maxlength="1"></div>
+                                <div class="cw-cell" style="grid-row: 10; grid-column: 12;"><input type="text" maxlength="1"></div>
+                                <div class="cw-cell" style="grid-row: 10; grid-column: 13;"><input type="text" maxlength="1"></div>
+                                <div class="cw-cell" style="grid-row: 10; grid-column: 14;"><input type="text" maxlength="1"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-4 text-center border-top pt-3" style="border-color: rgba(255,255,255,0.1) !important;">
+                        <p class="instruction text-accent"><i class="fa-solid fa-key"></i> Extreu les lletres de les caselles destacades (<span style="color:var(--accent);">*</span>) i ordena-les per descobrir la paraula final secreta:</p>
+                        <div class="input-group mt-2 mx-auto" style="max-width: 250px;">
+                            <input type="text" id="t3-input" class="form-control text-center text-uppercase h-large" maxlength="3" placeholder="---" autocomplete="off">
+                        </div>
+                        <div id="t3-feedback" class="feedback-msg mt-1"></div>
+                    </div>
+                </div>
+
+                <div class="actions flex-between mt-3">
+                    <button class="btn btn-outline" onclick="showScreen('screen-dashboard')">Tornar al Peritatge</button>
+                    <button class="btn btn-primary" onclick="verifyTrial3()">Introduir Marcador <i class="fa-solid fa-microchip ml-1"></i></button>
+                </div>
+            </div>
+        </section>
+
+        <!-- SCREEN 9: TRIAL 4 -->
+        <section id="screen-trial4" class="screen hidden trial-screen">
+            <div class="glass-panel">
+                <div class="flex-between mb-2">
+                    <h2 class="section-title"><i class="fa-solid fa-flask"></i> PROVA 4: Procés d'Anàlisi</h2>
+                    <button class="btn btn-sm btn-outline px-1" onclick="showScreen('screen-dashboard')"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+                
+                <div class="content-box mb-3">
+                    <p>Tenim la mostra (teixit muscular), coneixem la tècnica (DNA Barcoding) i el gen objectiu (COI). Ara repassa mentalment a quin pas lògic al laboratori hem de procedir en l'ordre adequat.</p>
+                </div>
+
+                <div class="puzzle-box">
+                    <p class="instruction">Fes clic als passos en l'ordre biològic i computacional correcte per construir el flux:</p>
+                    
+                    <!-- Selection bank -->
+                    <div class="step-bank" id="t4-bank">
+                        <button class="step-btn" onclick="selectStep(this, 'Identificació de l\'espècie')">Identificació de l'espècie</button>
+                        <button class="step-btn" onclick="selectStep(this, 'Comparació en base de dades bioinformàtica')">Comparació en base de dades bioinformàtica</button>
+                        <button class="step-btn" onclick="selectStep(this, 'Extracció d\'ADN')">Extracció d'ADN</button>
+                        <button class="step-btn" onclick="selectStep(this, 'Seqüenciació de Nova Generació/Sanger')">Seqüenciació de Nova Generació/Sanger</button>
+                        <button class="step-btn" onclick="selectStep(this, 'Amplificació mitjançant PCR del marcador')">Amplificació mitjançant PCR del marcador</button>
+                        <button class="step-btn" onclick="selectStep(this, 'Emissió de l\'informe biològic forense')">Emissió de l'informe biològic forense</button>
+                    </div>
+
+                    <!-- Answers slots -->
+                    <div class="step-slots mt-3" id="t4-slots">
+                        <!-- Generados JS -->
+                    </div>
+
+                    <div class="mt-2 text-center">
+                        <button class="btn btn-sm btn-outline" onclick="resetSteps()">Refer ordre <i class="fa-solid fa-rotate-left"></i></button>
+                    </div>
+
+                    <div id="t4-feedback" class="feedback-msg mt-1"></div>
+                </div>
+
+                <div class="actions flex-between mt-3">
+                    <button class="btn btn-outline" onclick="showScreen('screen-dashboard')">Tornar al Peritatge</button>
+                    <button class="btn btn-primary" onclick="verifyTrial4()">Compilar Flux <i class="fa-solid fa-microchip ml-1"></i></button>
+                </div>
+            </div>
+        </section>
+
+        <!-- SCREEN 10: TRIAL 5 -->
+        <section id="screen-trial5" class="screen hidden trial-screen">
+            <div class="glass-panel">
+                <div class="flex-between mb-2">
+                    <h2 class="section-title"><i class="fa-solid fa-chart-line"></i> PROVA 5: Coincidència Genètica</h2>
+                    <button class="btn btn-sm btn-outline px-1" onclick="showScreen('screen-dashboard')"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+                
+                <div class="content-box mb-3">
+                    <p>La seqüenciació ens ha retornat una traça o cadena genètica directa (cadena motlle obtinguda a partir de la PCR del COI). Una part del seqüenciador va fallar, reconstrueix la petita part amb la seqüència biològicament complementària que "s'enllaça" a aquest fragment per assegurar quines bases eren.</p>
+                </div>
+
+                <div class="puzzle-box text-center">
+                    <p class="instruction">Dona la cadena complementària (aparellament de bases: A-T, C-G) al següent fragment del gen:</p>
+                    
+                    <div class="dna-sequence my-3 p-3 text-center">
+                        <span class="text-white h3 mb-2 d-block tracking-wide" style="font-size: 1.2rem; word-break: break-all;">3' - G C T G A A C T T G G A C A A C C A G G A T C T C T T T T A - 5'</span>
+                        <div class="flex-center mt-4">
+                           <span class="text-accent h3 mr-2">5' -</span>
+                           <input type="text" id="t5-input" class="form-control text-center text-uppercase h-large sequence-input" maxlength="30" placeholder="Escriu la seqüència..." autocomplete="off">
+                           <span class="text-accent h3 ml-2">- 3'</span>
+                        </div>
+                    </div>
+                    
+                    <div id="t5-feedback" class="feedback-msg mt-1"></div>
+                </div>
+
+                <div class="actions flex-between mt-3">
+                    <button class="btn btn-outline" onclick="showScreen('screen-dashboard')">Tornar al Peritatge</button>
+                    <button class="btn btn-primary" onclick="verifyTrial5()">Reconstruir <i class="fa-solid fa-microchip ml-1"></i></button>
+                </div>
+            </div>
+        </section>
+
+        <!-- SCREEN 11: TRIAL 6 -->
+        <section id="screen-trial6" class="screen hidden trial-screen">
+            <div class="glass-panel">
+                <div class="flex-between mb-2">
+                    <h2 class="section-title"><i class="fa-solid fa-fish"></i> PROVA 6: Identificació Final</h2>
+                    <button class="btn btn-sm btn-outline px-1" onclick="showScreen('screen-dashboard')"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+                
+                <div class="content-box mb-3">
+                    <p>Ja disposes de la seqüència d’ADN i ara necessites esbrinar a quina espècie pertany. Per fer-ho, cal comparar-la amb les seqüències COI d’espècies de taurons disponibles a les bases de dades. Per esbrinar el nombre de diferències entre la seqüència problema i les de la base de dades, has de comparar cada posició nucleotídica i anotar quantes són diferents (Exemple senzill: si vull comparar la seqüència ATTG amb la seqüència ATTA, detecto que hi ha 1 posició diferent sobre un total de 4 posicions).</p>
+                </div>
+
+                <div class="puzzle-box">
+                    <div class="sequence-box mb-4 text-center p-3" style="background: rgba(100,255,218,0.1); border: 1px solid var(--accent); border-radius: 6px;">
+                        <h4 class="text-accent mb-2">SEQÜÈNCIA PROBLEMA</h4>
+                        <span class="tracking-wide font-bold font-monospace" style="font-size: 1.1rem; word-break: break-all;">GCTGAACTTGGACAACCAGGATCTCTTTTA</span>
+                    </div>
+
+                    <div style="overflow-x: auto;">
+                        <table class="w-100 reference-table pb-3">
+                            <thead>
+                                <tr>
+                                    <th class="text-left p-2" style="border-bottom: 2px solid var(--panel-border);">Espècie</th>
+                                    <th class="text-left p-2" style="border-bottom: 2px solid var(--panel-border);">Seqüència (30 nt)</th>
+                                    <th class="text-center p-2" style="border-bottom: 2px solid var(--panel-border); width: 120px;">Diferències</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="p-2 font-italic">Alopias vulpinus</td>
+                                    <td class="p-2 font-monospace tracking-wide" style="font-size:0.9rem;">GCTGAATTAGGACAACCCGGATCACTTCTA</td>
+                                    <td class="p-2"><input type="text" id="t6-dif-1" class="form-control text-center p-1" autocomplete="off" placeholder="N"></td>
+                                </tr>
+                                <tr>
+                                    <td class="p-2 font-italic">Carcharhinus falciformis</td>
+                                    <td class="p-2 font-monospace tracking-wide" style="font-size:0.9rem;">GCTGAGCTTGGACAACCTGGATCACTTTTA</td>
+                                    <td class="p-2"><input type="text" id="t6-dif-2" class="form-control text-center p-1" autocomplete="off" placeholder="N"></td>
+                                </tr>
+                                <tr>
+                                    <td class="p-2 font-italic">Carcharhinus leucas</td>
+                                    <td class="p-2 font-monospace tracking-wide" style="font-size:0.9rem;">GCTGAACTTGGACAACCTGGATCACTTTTA</td>
+                                    <td class="p-2"><input type="text" id="t6-dif-3" class="form-control text-center p-1" autocomplete="off" placeholder="N"></td>
+                                </tr>
+                                <tr>
+                                    <td class="p-2 font-italic">Carcharodon carcharias</td>
+                                    <td class="p-2 font-monospace tracking-wide" style="font-size:0.9rem;">GCCGAGCTGGGTCAACCAGGTTCCCTCCTC</td>
+                                    <td class="p-2"><input type="text" id="t6-dif-4" class="form-control text-center p-1" autocomplete="off" placeholder="N"></td>
+                                </tr>
+                                <tr>
+                                    <td class="p-2 font-italic">Galeocerdo cuvier</td>
+                                    <td class="p-2 font-monospace tracking-wide" style="font-size:0.9rem;">GCTGAACTCGGACAACCAGGATCACTCTTA</td>
+                                    <td class="p-2"><input type="text" id="t6-dif-5" class="form-control text-center p-1" autocomplete="off" placeholder="N"></td>
+                                </tr>
+                                <tr>
+                                    <td class="p-2 font-italic">Isurus oxyrinchus</td>
+                                    <td class="p-2 font-monospace tracking-wide" style="font-size:0.9rem;">GCCGAACTGGGTCAGCCTGGTTCCCTCCTA</td>
+                                    <td class="p-2"><input type="text" id="t6-dif-6" class="form-control text-center p-1" autocomplete="off" placeholder="N"></td>
+                                </tr>
+                                <tr>
+                                    <td class="p-2 font-italic">Prionace glauca</td>
+                                    <td class="p-2 font-monospace tracking-wide" style="font-size:0.9rem;">GCTGAACTTGGGCAACCTGGATCTCTTTTA</td>
+                                    <td class="p-2"><input type="text" id="t6-dif-7" class="form-control text-center p-1" autocomplete="off" placeholder="N"></td>
+                                </tr>
+                                <tr>
+                                    <td class="p-2 font-italic">Rhincodon typus</td>
+                                    <td class="p-2 font-monospace tracking-wide" style="font-size:0.9rem;">GCTGAACTAAGCCAACCTGGATCTCTTTTA</td>
+                                    <td class="p-2"><input type="text" id="t6-dif-8" class="form-control text-center p-1" autocomplete="off" placeholder="N"></td>
+                                </tr>
+                                <tr>
+                                    <td class="p-2 font-italic">Sphyrna lewini</td>
+                                    <td class="p-2 font-monospace tracking-wide" style="font-size:0.9rem;">GCTGAACTTGGACAACCAGGATCTCTTTTA</td>
+                                    <td class="p-2"><input type="text" id="t6-dif-9" class="form-control text-center p-1" autocomplete="off" placeholder="N"></td>
+                                </tr>
+                                <tr>
+                                    <td class="p-2 font-italic">Sphyrna zygaena</td>
+                                    <td class="p-2 font-monospace tracking-wide" style="font-size:0.9rem;">GCTGAACTTGGACAACCAGGATCTCTTCTA</td>
+                                    <td class="p-2"><input type="text" id="t6-dif-10" class="form-control text-center p-1" autocomplete="off" placeholder="N"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="input-group mt-4 p-3" style="background: rgba(17,34,64,0.8); border: 1px solid var(--accent); border-radius: 6px;">
+                        <label class="text-accent font-bold mb-2 d-inline-block">Espècie identificada:</label>
+                        <input type="text" id="t6-input" class="form-control text-center font-italic" placeholder="Escriu el nom científic aquí..." autocomplete="off">
+                    </div>
+                    
+                    <div id="t6-feedback" class="feedback-msg mt-3 text-center"></div>
+                </div>
+
+                <div class="actions flex-between mt-3">
+                    <button class="btn btn-outline" onclick="showScreen('screen-dashboard')">Tornar al Peritatge</button>
+                    <button class="btn btn-primary" onclick="verifyTrial6()">Tancar l'Informe Forense <i class="fa-solid fa-check-double ml-1"></i></button>
+                </div>
+            </div>
+        </section>
+
+        <!-- SCREEN 12: FINAL -->
+        <section id="screen-final" class="screen hidden">
+            <div class="glass-panel text-center alert-panel border-success pulse-glow-success">
+                <div class="logo-placeholder">
+                    <i class="fa-solid fa-shield-check fa-4x text-success"></i>
+                </div>
+                <h1 class="main-title text-success">CAS RESOLT</h1>
+                <h2 class="subtitle temp-final" id="final-time">Temps restant: 60:00</h2>
+                
+                <div class="content-box mt-3 text-left">
+                    <p>S'ha deduït amb la metodologia el següent informe final dictaminat:</p>
+                    <ul class="final-report-list">
+                        <li><strong>Espècie Determinada:</strong> <i class="text-accent">Carcharhinus longimanus</i></li>
+                        <li><strong>Estatus Legal:</strong> <span class="text-danger font-bold uppercase blink-slow">TRÀFIC ILEGAL</span> (Apèndix II del CITES)</li>
+                        <li><strong>Conseqüència:</strong> El contenidor queda immediatament immobilitzat. Els armadors s'enfronten a denúncies per delicte ecològic segons la convenció europea contra el comerç il·lícit de vida salvatge.</li>
+                    </ul>
+                </div>
+
+                <div class="mt-4">
+                    <h3 class="text-accent">Excel·lent treball, Agent!</h3>
+                    <p class="small-text mt-1 text-muted">Has completat la simulació per conèixer com el DNA Barcoding ajuda directament a la fiscalia judicial forense de medi ambient.</p>
+                </div>
+                
+                <div class="mt-4">
+                     <button class="btn btn-outline" onclick="location.reload()">REINICIAR SIMULADOR</button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Global Footer -->
+    <footer class="global-footer text-center">
+        <p class="font-bold m-0" style="color: var(--text-main);">Iris Alemany Hermoso & José Antonio Jurado Rivera</p>
+        <p class="m-0">Universitat de les Illes Balears</p>
+        <p class="m-0">Departament de Biologia (Genètica)</p>
+        <div class="mt-2" style="font-size: 0.8rem;">
+            <a href="https://www.uib.es/personal/ABjIyMTkwNA/" target="_blank" rel="noopener">https://www.uib.es/personal/ABjIyMTkwNA/</a><br>
+            <a href="https://www.uib.es/personal/ABjIwNDQxMw/" target="_blank" rel="noopener">https://www.uib.es/personal/ABjIwNDQxMw/</a>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        // Sincronitzador visual: Clona el valor del timer principal ocult a qualsevol '.sync-timer' visible al bloc inicial 
+        setInterval(function() {
+            var sourceTimer = document.getElementById('timer');
+            if(sourceTimer) {
+                var syncTargets = document.querySelectorAll('.sync-timer');
+                syncTargets.forEach(function(target) {
+                    target.innerHTML = sourceTimer.innerHTML;
+                });
+            }
+        }, 100);
+    </script>
+</body>
+</html>
