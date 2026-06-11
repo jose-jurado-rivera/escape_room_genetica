@@ -91,7 +91,7 @@ function updateTimerDisplay() {
 }
 
 function penalize() {
-    timeLeft = Math.max(0, timeLeft - 60); // Subtract 60 seconds
+    timeLeft = Math.max(0, timeLeft - 5); // Subtract 5 seconds
     penaltyCount++;
     document.getElementById('penalty-count').innerText = penaltyCount;
     updateTimerDisplay();
@@ -102,7 +102,7 @@ function penalize() {
         flashOverlay.classList.remove('flash-active');
     }, 300);
 
-    addToTerminal(`[ERROR] Parametres incorrectes. Penalització de temps (-1 min) aplicada. Intents de hackeig o errada detectada.`);
+    addToTerminal(`[ERROR] Parametres incorrectes. Penalització de temps (-5 s) aplicada. Intents de hackeig o errada detectada.`);
 }
 
 function addToTerminal(msg) {
